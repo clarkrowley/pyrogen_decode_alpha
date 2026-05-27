@@ -17,7 +17,7 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 @Logged
 public class Drive {
 
-    //private AutoDrive autoDrive;
+    private LimeLight limeLight;
 
     public final ExpansionHubMotor left_front = new ExpansionHubMotor(0, 0);
     public final ExpansionHubMotor right_front = new ExpansionHubMotor(0, 1);
@@ -26,7 +26,9 @@ public class Drive {
 
     public double fwdSpeed;
 
-    public Drive() {
+    public Drive(LimeLight limeLight) {
+
+        this.limeLight = limeLight;
 
         left_front.setReversed(false);
         left_back.setReversed(false);
@@ -64,7 +66,7 @@ public class Drive {
     public void autoAim() {
         final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
         final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-        double headingError = LimeLight.INSTANCE.getTargetBearing();
+        double headingError = limeLight.getTargetBearing();
         double turn   = Math.clamp(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
         moveRobot(0.,0.,turn);
     }

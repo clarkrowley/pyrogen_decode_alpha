@@ -1,44 +1,30 @@
 
 package first.robot.subsystems;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.networktables.NetworkTable;
+import org.wpilib.networktables.NetworkTableEntry;
+import org.wpilib.networktables.NetworkTableInstance;
+import org.wpilib.smartdashboard.SmartDashboard;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.teamcode.utils.*;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-
-import java.util.ArrayList;
-import java.util.List;
+import first.robot.LimelightHelpers;
+import first.robot.LimelightHelpers.PoseEstimate;
 
 public class LimeLight {
-    public static final LimeLight INSTANCE = new LimeLight();
-    private LimeLight() { }
 
-    private Limelight3A limelight;
+    private final NetworkTable table = NetworkTableInstance.getDefault().getTable(getName());
+    private final NetworkTableEntry latency = table.getEntry("tl");
+    private final NetworkTableEntry tagId = table.getEntry("tid");
+    private int currentTagId = 0;
 
     private boolean I_AM_BLUE;
     private int BLUE_TAG_ID =  20;
-    private int GPP_TAG_ID =  21;
-    private int PGP_TAG_ID =  22;
-    private int PPG_TAG_ID =  23;
     private int RED_TAG_ID =  24;
 
     public static class TargetPose {
-        public Pose3D pose;
+        public Pose3d pose;
         public double range;
         public double bearing;
         public double yaw;
@@ -46,136 +32,172 @@ public class LimeLight {
     }
     public TargetPose targetPose;
 
-    private final static boolean LEDS = false;
-    public DcMotor ledBlue = null;
-    public DcMotor ledRed = null;
-
-    private List<Integer> ob_arr = new ArrayList<Integer>(3);
-
-    public void init(HardwareMap hardwareMap)
+    public LimeLight()
     {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(0);
-        limelight.start();
+        setPipeline(0);
 
         targetPose = new TargetPose();
         targetPose.id = 0;
 
-        // initialize ob_arr
-        ob_arr.add(GPP_TAG_ID);
-        ob_arr.add(PGP_TAG_ID);
-        ob_arr.add(PPG_TAG_ID);
     }
 
     public void setAlliance(boolean iAmBlue) {
         I_AM_BLUE = iAmBlue;
-        if (LEDS) {
-            ledOn();
-        }
-    }
-
-    public void ledOff() {
-        if (LEDS) {
-            ledBlue.setPower(0.);
-            ledRed.setPower(0.);
-        }
-    }
-
-    public void ledOn() {
-        if (LEDS) {
-            if (I_AM_BLUE) {
-                ledBlue.setPower(1.);
-            }
-            else {
-                ledRed.setPower(1.);
-            }
-        }
     }
 
     public TargetPose getTargetPose() {
         int targetId = I_AM_BLUE ? BLUE_TAG_ID : RED_TAG_ID;
         TargetPose targetPose = new TargetPose();
         targetPose.id = 0;
-        LLResult result = limelight.getLatestResult();
-        if (result.isValid()) {
-            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-            for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                if (fr.getFiducialId() == targetId) {
-                    Pose3D pose = fr.getTargetPoseCameraSpace();
-                    targetPose.pose = pose;
-                    Position position = pose.getPosition();
-                    //targetPose.range = Math.sqrt(position.x*position.x+position.y*position.y);
-                    targetPose.range = position.z;
-                    targetPose.bearing = pose.getOrientation().getYaw();
-                    targetPose.yaw = fr.getRobotPoseTargetSpace().getOrientation().getYaw();
-                    targetPose.id = fr.getFiducialId();
-                }
-            }
+
+        currentTagId = getTagId();
+
+        if (currentTagId == targetId) {
+            Pose3d pose = LimelightHelpers.getTargetPose3d_CameraSpace(getName());  
+            targetPose.pose = pose;
+            targetPose.range = pose.getTranslation().toTranslation2d().getNorm();
+            targetPose.bearing = pose.getTranslation().toTranslation2d().getAngle().getDegrees();
+            targetPose.yaw = pose.getRotation().toRotation2d().getDegrees();
+            targetPose.id = currentTagId;
         }
         return targetPose;
     }
 
-    public int getObeliskTag() {
-        int yaw_sign = I_AM_BLUE ? -1 : 1;
-        LLResult result = limelight.getLatestResult();
-        if (result.isValid()) {
-            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-            for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                Pose3D t_pose = fr.getTargetPoseCameraSpace();
-                if (t_pose.getOrientation().getPitch() * yaw_sign > 0) {
-                    return fr.getFiducialId();
-                }
-            }
-        }
-        return -1;
-    }
-
-    public void stop() {
-        limelight.stop();
-    }
-
-    public int getGreenSpot() {
-       int i = getObeliskTag();
-       if (i == GPP_TAG_ID) {return 0;}
-       if (i == PGP_TAG_ID) {return 1;}
-       if (i == PPG_TAG_ID) {return 2;}
-       return -1;
-    }
-
     public double getTargetBearing() {
         double offset = 0.;
-        LLResult result = limelight.getLatestResult();
-        if (result.isValid()) {
-            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-            for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                return offset - fr.getTargetXDegrees() ;
-            }
+        currentTagId = getTagId();
+        if (currentTagId > 0) {
+            return offset - LimelightHelpers.getTX(getName());
         }
         return 0.;
     }
 
-    // ftclib Pose2d with heading in radians
-    public Pose2d getPose2d() {
-        Pose2D pose2D = getPose2D();
-        return new Pose2d(pose2D.getX(DistanceUnit.INCH),
-                          pose2D.getY(DistanceUnit.INCH),
-                          new Rotation2d(pose2D.getHeading(AngleUnit.RADIANS)));
+    public void m_periodic() {
+        currentTagId = getTagId();
+        if(currentTagId > 0) {
+        // lastPose2d = new Pose2d(lastBotPose[0],lastBotPose[1], new Rotation2d(lastBotPose[5]));
+        //SmartDashboard.putNumber(getPosition()+"Botpose X: ",lastBotPose[0]);
+        //SmartDashboard.putNumber(getPosition()+"Botpose Y: ",lastBotPose[1]);
+        //SmartDashboard.putNumber(getPosition()+"Botpose Yaw: ",lastBotPose[5]);
+        }       
+        SmartDashboard.putNumber(getPosition()+"Latency: ",(double) latency.getNumber(0));
+        SmartDashboard.putNumber(getPosition()+"TagID: ",tagId.getInteger(-1));
+        SmartDashboard.putBoolean(getPosition()+"HasTarget: ",(currentTagId>0));
+        //SmartDashboard.putNumber(getPosition()+"Limelight Xoffset: ",getXOffset());
+        //SmartDashboard.putNumber(getPosition()+"Limelight Yoffset: ",getYOffset());
+        // This method will be called once per scheduler run
     }
 
-    // FTC Pose2D
-    public Pose2D getPose2D() {
-        Pose2D pose2D = new Pose2D(DistanceUnit.INCH,-999.,-999., AngleUnit.DEGREES,0.);
-        LLResult result = limelight.getLatestResult();
-        if (result.isValid()) {
-            //Pose3D botpose = result.getBotpose();
-            //Pose3D botposeMt2 = result.getBotpose_MT2();
-            Pose3D pose3D = result.getBotpose_MT2();
-            pose2D = new Pose2D(DistanceUnit.INCH,
-                                pose3D.getPosition().x,
-                                pose3D.getPosition().y,
-                                AngleUnit.DEGREES,
-                                pose3D.getOrientation().getYaw(AngleUnit.DEGREES));
-        }
-        return pose2D;
+    /**
+     * Gets the name of the limelight.
+     * @return The name of the limelight as a string
+     */
+    public String getName() {
+        return "limelight";
     }
+
+    /**
+     * Gets the position of the limelight.
+     * @return The position of the limelight as a string
+     */
+    public String getPosition() {
+        return "left";
+    }
+    /**
+     * Toggles between pipeline 0 and 1.
+     */
+    public void setPipeline(int pipeline) {
+        LimelightHelpers.setPipelineIndex(getName(), pipeline);
+    }
+
+  /**
+   * Returns the Apriltags estimated pose or null if there is no pose.
+   * @return The limelight's outputted pose
+   */
+  public Pose2d getBotPose2dMT1() {
+    return LimelightHelpers.getBotPoseEstimate_wpiBlue(getName()).pose;
+  }
+
+  public PoseEstimate getMT1PoseEstimate() {
+    return LimelightHelpers.getBotPoseEstimate_wpiBlue(getName());
+  }
+
+  public Pose2d getBotPose2dMT2() {
+    return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(getName()).pose;
+  }
+
+  public PoseEstimate getMT2PoseEstimate() {
+    return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(getName());
+  }
+
+  /**
+   * Returns the Apriltags estimated pose in target space or null if there is no pose.
+   * @return The limleight's ouputted target space pose
+   */
+  public Pose2d getBotPose2dTargetSpace() {
+    return new Pose2d(getBotPoseTargetSpace()[2], getBotPoseTargetSpace()[0], new Rotation2d(Math.toRadians(getBotPoseTargetSpace()[4])));
+  }
+
+  /**
+   * Returns the latency of the pipeline 
+   * @return
+   */
+  public double getLatency() {
+    return latency.getDouble(0);
+  }
+
+  /**
+   * Gets the full array of bot pose values in target space
+   * @return An array of all pose values
+   */
+  public double[] getBotPoseTargetSpace() {
+    return LimelightHelpers.getBotPose_TargetSpace(getName());
+  }
+  /**
+   * Gets the ID of the biggest tag in frame.
+   * @return The ID of the tag
+   */
+  public int getTagId() {
+    return (int) tagId.getInteger(0);
+  }
+  /**
+   * Gets the number of tags that the limelight can see.
+   * @return The number of tags
+   */
+  public int getTagCount() {
+    return LimelightHelpers.getTargetCount(getName());
+  }
+
+  /**
+   * Gets the X Offset of the tag from the center of the frame.
+   * @return The X Offset
+   */
+  public double getXOffset() {
+    return LimelightHelpers.getTX(getName());
+  }
+  /**
+   * Gets the Y Offset of the tag from the center of frame.
+   * @return The Y Offset
+   */
+  public double getYOffset() {
+    return LimelightHelpers.getTY(getName());
+  }
+  /**
+   * Gets the area of the tag in frame
+   * @return The area of the tag
+   */
+  public double getTargetArea() {
+    return LimelightHelpers.getTA(getName());
+  }
+  /**
+   * Turns the limelight LEDs on
+   */
+  public void setLedsOn() {
+    LimelightHelpers.setLEDMode_ForceOn(getName());
+  }
+
+  public int getPipeline() {
+    return (int) LimelightHelpers.getCurrentPipelineIndex(getName());
+  }
+
 }

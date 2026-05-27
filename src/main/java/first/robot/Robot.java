@@ -5,8 +5,10 @@
 package first.robot;
 
 import org.wpilib.framework.OpModeRobot;
+import org.wpilib.net.PortForwarder;
 
 import first.robot.subsystems.Drive;
+import first.robot.subsystems.LimeLight;
 
 /**
  * The methods in this class are called automatically as described in the OpModeRobot documentation.
@@ -18,13 +20,26 @@ import first.robot.subsystems.Drive;
 public class Robot extends OpModeRobot {
 
   public final Drive drive;
+  public final LimeLight limeLight;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
-    drive = new Drive();
+    limeLight = new LimeLight();
+    drive = new Drive(limeLight);
+
+    PortForwarder.add(5801, "172.29.0.1", 5801);
+    PortForwarder.add(5802, "172.29.0.1", 5802);
+    PortForwarder.add(5803, "172.29.0.1", 5803);
+    PortForwarder.add(5804, "172.29.0.1", 5804);
+    PortForwarder.add(5805, "172.29.0.1", 5805);
+    PortForwarder.add(5806, "172.29.0.1", 5806);
+    PortForwarder.add(5807, "172.29.0.1", 5807);
+    PortForwarder.add(5808, "172.29.0.1", 5808);
+    PortForwarder.add(5809, "172.29.0.1", 5809);
+
   }
 
   /** This function is called exactly once when the DS first connects. */
