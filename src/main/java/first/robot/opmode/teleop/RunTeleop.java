@@ -158,8 +158,8 @@ public class RunTeleop extends PeriodicOpMode {
         */
 
         if (userControls.getGamepad(1).getButtonPressed(Button.LEFT_BUMPER)) {
-            //Drive.autoAim();
-            //telemetry.addData("Drive: ","AutoAim()");
+            robot.drive.autoAim();
+            // telemetry.addData("Drive: ","AutoAim()");
         } else {
             double drive = -1. * squareInput(userControls.getGamepad(1).getLeftY());
             double strafe = -1. * squareInput(userControls.getGamepad(1).getLeftX());
