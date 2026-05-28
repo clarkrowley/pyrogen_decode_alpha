@@ -9,8 +9,8 @@ import org.wpilib.networktables.NetworkTableEntry;
 import org.wpilib.networktables.NetworkTableInstance;
 import org.wpilib.smartdashboard.SmartDashboard;
 
-import first.robot.LimelightHelpers;
-import first.robot.LimelightHelpers.PoseEstimate;
+import first.robot.utils.LimelightHelpers;
+import first.robot.utils.LimelightHelpers.PoseEstimate;
 
 public class LimeLight {
 
