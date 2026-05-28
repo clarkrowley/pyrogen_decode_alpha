@@ -25,7 +25,6 @@ public class RunTeleop extends PeriodicOpMode {
 
     final private Timer teleopTimer = new Timer();
     final private Timer blinkTimer = new Timer();
-    final private Timer rumbleTimer = new Timer();
     boolean endGameWarning = false;
 
     @Override
