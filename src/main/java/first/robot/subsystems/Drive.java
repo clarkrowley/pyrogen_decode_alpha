@@ -57,6 +57,7 @@ public class Drive {
         left_back.setThrottle(0.);
         right_front.setThrottle(0.);
         right_back.setThrottle(0.);
+        fwdSpeed = 0.;
     }
 
     public void moveRobot(double fwd, double strafe, double rot) {

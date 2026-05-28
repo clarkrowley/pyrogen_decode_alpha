@@ -8,6 +8,7 @@ import org.wpilib.framework.OpModeRobot;
 import org.wpilib.net.PortForwarder;
 
 import first.robot.subsystems.Drive;
+import first.robot.subsystems.Intake;
 
 /**
  * The methods in this class are called automatically as described in the OpModeRobot documentation.
@@ -19,6 +20,7 @@ import first.robot.subsystems.Drive;
 public class Robot extends OpModeRobot {
 
   public final Drive drive;
+  public final Intake intake;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -26,6 +28,7 @@ public class Robot extends OpModeRobot {
    */
   public Robot() {
     drive = new Drive();
+    intake = new Intake(drive);
 
     PortForwarder.add(5801, "172.29.0.1", 5801);
     PortForwarder.add(5802, "172.29.0.1", 5802);

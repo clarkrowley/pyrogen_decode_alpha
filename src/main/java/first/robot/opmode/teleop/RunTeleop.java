@@ -3,6 +3,7 @@ package first.robot.opmode.teleop;
 import org.wpilib.driverstation.DefaultUserControls;
 import org.wpilib.driverstation.Gamepad.Button;
 import org.wpilib.driverstation.GenericHID.RumbleType;
+import org.wpilib.event.BooleanEvent;
 import org.wpilib.opmode.PeriodicOpMode;
 import org.wpilib.opmode.Teleop;
 import org.wpilib.system.Timer;
@@ -93,18 +94,18 @@ public class RunTeleop extends PeriodicOpMode {
             }
         }
 
-        /*
-        // boolean intakeInButton = gamepad1.left_trigger > 0.2;
-        //boolean intakeOutButton = gamepad1.left_bumper;
-        boolean intakeInButton = gamepad1.a;
-        boolean intakeOutButton = gamepad1.b;
+        //boolean intakeInButton = userControls.getGamepad(1).getLeftTriggerAxis().greaterThan(0.3);
+        boolean intakeInButton = userControls.getGamepad(1).getButtonPressed(Button.SOUTH_FACE); // A button
+        boolean intakeOutButton = userControls.getGamepad(1).getButtonPressed(Button.EAST_FACE); // B button
+
         if (intakeOutButton && intakeInButton) {
             intakeInButton = false;
             intakeOutButton = false;
         }
 
+        /*
         boolean kickerBackButton = gamepad1.right_bumper;
-        boolean kickerOnButton = gamepad1.right_trigger > 0.3;
+        boolean kickerOnButton = userControls.getGamepad(1).getRightTriggerAxis().greaterThan(0.3);
         if (kickerOnButton && kickerBackButton) {
             kickerOnButton = false;
         }
@@ -113,20 +114,22 @@ public class RunTeleop extends PeriodicOpMode {
         boolean shooterButtonMedium = gamepad1.dpad_right;
         boolean shooterButtonLow = gamepad1.dpad_down;
         boolean shooterButtonOff = gamepad1.dpad_left;
+        */
 
         // INTAKE CODE
         if (intakeInButton) {
-            Intake.INSTANCE.intakein();
-            telemetry.addLine("Intake: In");
+            robot.intake.intakein();
+            //telemetry.addLine("Intake: In");
         } else if (intakeOutButton) {
-            Intake.INSTANCE.intakeout();
-            telemetry.addLine("Intake: Out");
+            robot.intake.intakeout();
+            //telemetry.addLine("Intake: Out");
         } else {
-            Intake.INSTANCE.intakeoff();
-            telemetry.addLine("Intake: Off");
+            robot.intake.intakeoff();
+            //telemetry.addLine("Intake: Off");
 
         }
 
+        /*
         if (shooterButtonHigh) {
             Shooter.INSTANCE.high();
             telemetry.addLine("Shooter: ShootHigh");
