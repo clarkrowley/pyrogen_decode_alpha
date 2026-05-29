@@ -1,4 +1,4 @@
-package first.robot.opmode.teleop;
+package first.robot.opmode;
 
 import org.wpilib.driverstation.DefaultUserControls;
 import org.wpilib.driverstation.Gamepad.Button;
@@ -159,12 +159,12 @@ public class RunTeleop extends PeriodicOpMode {
         */
 
         if (userControls.getGamepad(1).getButtonPressed(Button.LEFT_BUMPER)) {
-            //Drive.autoAim();
+            robot.drive.autoAim();
             //telemetry.addData("Drive: ","AutoAim()");
         } else {
-            double drive = -1. * squareInput(userControls.getGamepad(1).getLeftY());
-            double strafe = -1. * squareInput(userControls.getGamepad(1).getLeftX());
-            double turn = -1. * squareInput(userControls.getGamepad(1).getRightX());
+            double drive = 1. * squareInput(userControls.getGamepad(1).getLeftY());
+            double strafe = 1. * squareInput(userControls.getGamepad(1).getLeftX());
+            double turn = 1. * squareInput(userControls.getGamepad(1).getRightX());
             robot.drive.moveRobot(drive, strafe, turn);
             // telemetry.addData("Drive: ","powers: %5.2f / %5.2f / %5.2f",drive,strafe,turn);
         }
