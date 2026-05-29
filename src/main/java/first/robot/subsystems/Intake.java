@@ -7,7 +7,7 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 import first.robot.subsystems.Drive;
 
 public class Intake {
-    private final ExpansionHubMotor intake = new ExpansionHubMotor(1, 0);
+    private final ExpansionHubMotor intake = new ExpansionHubMotor(0, 1);
     private Drive drive;
 
     public Intake(Drive drive) {
@@ -19,10 +19,10 @@ public class Intake {
         intake.resetEncoder();
     }
 
-    private double INTAKE_OUT_POWER = 0.59;
+    private double INTAKE_OUT_POWER = 0.8;
     private double INTAKE_IN_POWER = -1.0;
     private double INTAKE_OFF_POWER = 0.0;
-    private double INTAKE_MIN_POWER = -0.4;
+    private double INTAKE_MIN_POWER = -0.8;
 
     public void intakein(){
         intake.setThrottle(INTAKE_IN_POWER);

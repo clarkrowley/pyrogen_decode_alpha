@@ -94,7 +94,26 @@ public class RunTeleop extends PeriodicOpMode {
             }
         }
 
-        /*
+        //boolean intakeInButton = userControls.getGamepad(1).getLeftTriggerAxis().greaterThan(0.3);
+        boolean intakeInButton = userControls.getGamepad(1).getButton(Button.SOUTH_FACE); // A button
+        boolean intakeOutButton = userControls.getGamepad(1).getButton(Button.EAST_FACE); // B button
+
+        if (intakeOutButton && intakeInButton) {
+            intakeInButton = false;
+            intakeOutButton = false;
+        }
+
+        if (intakeInButton) {
+            robot.intake.intakein();
+            //telemetry.addLine("Intake: In");
+        } else if (intakeOutButton) {
+            robot.intake.intakeout();
+            //telemetry.addLine("Intake: Out");
+        } else {
+            robot.intake.intakeoff();
+            //telemetry.addLine("Intake: Off");
+
+        }/*
         // boolean intakeInButton = gamepad1.left_trigger > 0.2;
         //boolean intakeOutButton = gamepad1.left_bumper;
         boolean intakeInButton = gamepad1.a;

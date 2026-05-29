@@ -10,6 +10,7 @@ import org.wpilib.framework.OpModeRobot;
 import org.wpilib.net.PortForwarder;
 
 import first.robot.subsystems.Drive;
+import first.robot.subsystems.Intake;
 import first.robot.subsystems.LimeLight;
 
 /**
@@ -24,6 +25,7 @@ public class Robot extends OpModeRobot {
 
   public final Drive drive;
   public final LimeLight limeLight;
+  public final Intake intake;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,7 +34,7 @@ public class Robot extends OpModeRobot {
   public Robot() {
     limeLight = new LimeLight();
     drive = new Drive(limeLight);
-
+intake = new Intake(drive);
     PortForwarder.add(5801, "172.29.0.1", 5801);
     PortForwarder.add(5802, "172.29.0.1", 5802);
     PortForwarder.add(5803, "172.29.0.1", 5803);
