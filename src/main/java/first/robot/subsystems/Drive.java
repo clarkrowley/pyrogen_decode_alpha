@@ -17,10 +17,10 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 @Logged
 public class Drive {
 
-    public final ExpansionHubMotor left_front = new ExpansionHubMotor(0, 0);
-    public final ExpansionHubMotor right_front = new ExpansionHubMotor(0, 1);
-    public final ExpansionHubMotor left_back = new ExpansionHubMotor(0, 2);
-    public final ExpansionHubMotor right_back = new ExpansionHubMotor(0, 3);
+    public final ExpansionHubMotor left_front = new ExpansionHubMotor(1, 3);
+    public final ExpansionHubMotor right_front = new ExpansionHubMotor(0, 3);
+    public final ExpansionHubMotor left_back = new ExpansionHubMotor(1, 0);
+    public final ExpansionHubMotor right_back = new ExpansionHubMotor(0, 0);
 
     public double fwdSpeed;
 

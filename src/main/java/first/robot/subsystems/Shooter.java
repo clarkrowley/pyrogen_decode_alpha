@@ -5,9 +5,9 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 
 @Logged
 public class Shooter {
-    public final ExpansionHubMotor left_motor = new ExpansionHubMotor(1, 1);
-    public final ExpansionHubMotor right_motor = new ExpansionHubMotor(1, 2);
-    public final ExpansionHubMotor kicker = new ExpansionHubMotor(1, 3);
+    public final ExpansionHubMotor left_motor = new ExpansionHubMotor(1, 2);
+    public final ExpansionHubMotor right_motor = new ExpansionHubMotor(0, 2);
+    public final ExpansionHubMotor kicker = new ExpansionHubMotor(1, 1);
 
     public double kP = 0.0;
     public double kI = 0.0;

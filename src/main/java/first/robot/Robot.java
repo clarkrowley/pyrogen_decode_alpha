@@ -4,6 +4,8 @@
 
 package first.robot;
 
+import org.wpilib.driverstation.DefaultUserControls;
+import org.wpilib.driverstation.UserControlsInstance;
 import org.wpilib.framework.OpModeRobot;
 import org.wpilib.net.PortForwarder;
 
@@ -18,6 +20,7 @@ import first.robot.subsystems.Shooter;
  * or the package after creating this project, you must also update the Main.java file in the
  * project.
  */
+@UserControlsInstance(DefaultUserControls.class)
 public class Robot extends OpModeRobot {
 
   public final Drive drive;

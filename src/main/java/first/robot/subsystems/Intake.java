@@ -6,7 +6,7 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 import first.robot.subsystems.Drive;
 
 public class Intake {
-    private final ExpansionHubMotor intake = new ExpansionHubMotor(1, 0);
+    private final ExpansionHubMotor intake = new ExpansionHubMotor(0, 1);
     private Drive drive;
 
     public Intake(Drive drive) {
