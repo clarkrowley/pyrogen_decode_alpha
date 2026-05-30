@@ -104,80 +104,6 @@ public class RunTeleop extends PeriodicOpMode {
             intakeOutButton = false;
         }
 
-        if (intakeInButton) {
-            robot.intake.intakein();
-            //telemetry.addLine("Intake: In");
-        } else if (intakeOutButton) {
-            robot.intake.intakeout();
-            //telemetry.addLine("Intake: Out");
-        } else {
-            robot.intake.intakeoff();
-            //telemetry.addLine("Intake: Off");
-
-        }/*
-        // boolean intakeInButton = gamepad1.left_trigger > 0.2;
-        //boolean intakeOutButton = gamepad1.left_bumper;
-        boolean intakeInButton = gamepad1.a;
-        boolean intakeOutButton = gamepad1.b;
-        if (intakeOutButton && intakeInButton) {
-            intakeInButton = false;
-            intakeOutButton = false;
-        }
-
-        boolean kickerBackButton = gamepad1.right_bumper;
-        boolean kickerOnButton = gamepad1.right_trigger > 0.3;
-        if (kickerOnButton && kickerBackButton) {
-            kickerOnButton = false;
-        }
-
-        boolean shooterButtonHigh =  gamepad1.dpad_up;
-        boolean shooterButtonMedium = gamepad1.dpad_right;
-        boolean shooterButtonLow = gamepad1.dpad_down;
-        boolean shooterButtonOff = gamepad1.dpad_left;
-
-        // INTAKE CODE
-        if (intakeInButton) {
-            Intake.INSTANCE.intakein();
-            telemetry.addLine("Intake: In");
-        } else if (intakeOutButton) {
-            Intake.INSTANCE.intakeout();
-            telemetry.addLine("Intake: Out");
-        } else {
-            Intake.INSTANCE.intakeoff();
-            telemetry.addLine("Intake: Off");
-
-        }
-
-        if (shooterButtonHigh) {
-            Shooter.INSTANCE.high();
-            telemetry.addLine("Shooter: ShootHigh");
-        }
-        if (shooterButtonMedium) {
-            Shooter.INSTANCE.medium();
-            telemetry.addLine("Shooter: shootMid");
-        }
-        if (shooterButtonLow) {
-            Shooter.INSTANCE.low();
-            telemetry.addLine("Shooter: ShootLow");
-        }
-        if (shooterButtonOff) {
-            Shooter.INSTANCE.stop();
-            telemetry.addLine("Shooter: Stop");
-        }
-
-        if (kickerOnButton) {
-            Shooter.INSTANCE.kickeron();
-            telemetry.addLine("Kicker: In");
-        } else if (kickerBackButton) {
-            Shooter.INSTANCE.kickerout();
-            telemetry.addLine("Kicker: Out");
-        } else {
-            Shooter.INSTANCE.kickeroff();
-            telemetry.addLine("Kicker: Off");
-        }
-
-        */
-
         if (userControls.getGamepad(1).getButtonPressed(Button.LEFT_BUMPER)) {
             robot.drive.autoAim();
             //telemetry.addData("Drive: ","AutoAim()");
@@ -190,7 +116,6 @@ public class RunTeleop extends PeriodicOpMode {
         }
 
         robot.limeLight.m_periodic();
-        robot.pinpoint.m_periodic();
         SmartDashboard.updateValues();
         // telemetry.update();
     }
