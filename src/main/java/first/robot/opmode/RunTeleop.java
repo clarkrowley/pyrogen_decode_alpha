@@ -5,6 +5,7 @@ import org.wpilib.driverstation.Gamepad.Button;
 import org.wpilib.driverstation.GenericHID.RumbleType;
 import org.wpilib.opmode.PeriodicOpMode;
 import org.wpilib.opmode.Teleop;
+import org.wpilib.smartdashboard.SmartDashboard;
 import org.wpilib.system.Timer;
 
 import first.robot.Robot;
@@ -188,6 +189,9 @@ public class RunTeleop extends PeriodicOpMode {
             // telemetry.addData("Drive: ","powers: %5.2f / %5.2f / %5.2f",drive,strafe,turn);
         }
 
+        robot.limeLight.m_periodic();
+        robot.pinpoint.m_periodic();
+        SmartDashboard.updateValues();
         // telemetry.update();
     }
 

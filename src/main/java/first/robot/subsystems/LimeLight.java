@@ -17,6 +17,7 @@ public class LimeLight {
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable(getName());
     private final NetworkTableEntry latency = table.getEntry("tl");
     private final NetworkTableEntry tagId = table.getEntry("tid");
+    private final NetworkTableEntry hb = table.getEntry("hb");
     private int currentTagId = 0;
 
     private boolean I_AM_BLUE;
@@ -80,6 +81,7 @@ public class LimeLight {
         //SmartDashboard.putNumber(getPosition()+"Botpose Y: ",lastBotPose[1]);
         //SmartDashboard.putNumber(getPosition()+"Botpose Yaw: ",lastBotPose[5]);
         }       
+        SmartDashboard.putNumber("hb: ",(double) hb.getNumber(0));
         SmartDashboard.putNumber(getPosition()+"Latency: ",(double) latency.getNumber(0));
         SmartDashboard.putNumber(getPosition()+"TagID: ",tagId.getInteger(-1));
         SmartDashboard.putBoolean(getPosition()+"HasTarget: ",(currentTagId>0));
