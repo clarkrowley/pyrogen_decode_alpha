@@ -107,8 +107,14 @@ public class TuneShooter extends PeriodicOpMode {
 
         double m_vel_left = robot.shooter.left_motor.getEncoderVelocity();
         double m_vel_right = robot.shooter.right_motor.getEncoderVelocity();
+        double TARGET_VEL = RPM * 27 / 60;
+        SmartDashboard.putNumber("target tickspersec speed",TARGET_VEL);
         SmartDashboard.putNumber("left motor speed",m_vel_left);
         SmartDashboard.putNumber("right motor speed",m_vel_right);
+        double m_cur_left = robot.shooter.left_motor.getCurrent().magnitude();
+        SmartDashboard.putNumber("left motor current",m_cur_left);
+        double m_cur_right = robot.shooter.right_motor.getCurrent().magnitude();
+        SmartDashboard.putNumber("right motor current",m_cur_right);
 
         double drive = -1. * squareInput(userControls.getGamepad(1).getLeftY());
         double strafe = -1. * squareInput(userControls.getGamepad(1).getLeftX());
