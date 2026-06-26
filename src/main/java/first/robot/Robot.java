@@ -9,7 +9,8 @@ import org.wpilib.driverstation.UserControlsInstance;
 import org.wpilib.framework.OpModeRobot;
 import org.wpilib.net.PortForwarder;
 
-import first.robot.subsystems.DriveA301;
+import first.robot.subsystems.Drive;
+//import first.robot.subsystems.DriveA301;
 import first.robot.subsystems.Intake;
 import first.robot.subsystems.Shooter;
 
@@ -23,8 +24,8 @@ import first.robot.subsystems.Shooter;
 @UserControlsInstance(DefaultUserControls.class)
 public class Robot extends OpModeRobot {
 
-  //public final Drive drive;
-  public final DriveA301 drive;
+  public final Drive drive;
+  //public final DriveA301 drive;
   public final Intake intake;
   public final Shooter shooter;
 
@@ -33,8 +34,8 @@ public class Robot extends OpModeRobot {
    * initialization code.
    */
   public Robot() {
-    //drive = new Drive();
-    drive = new DriveA301();
+    drive = new Drive();
+    //drive = new DriveA301();
     intake = new Intake(drive);
     shooter = new Shooter();
 

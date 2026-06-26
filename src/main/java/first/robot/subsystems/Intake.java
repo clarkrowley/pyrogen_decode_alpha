@@ -2,13 +2,16 @@ package first.robot.subsystems;
 
 import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 
-import first.robot.subsystems.DriveA301;
+//import first.robot.subsystems.Drive;
+//import first.robot.subsystems.DriveA301;
 
 public class Intake {
     private final ExpansionHubMotor intake = new ExpansionHubMotor(0, 1);
-    private DriveA301 drive;
+    private Drive drive;
+    // private DriveA301 drive;
 
-    public Intake(DriveA301 drive) {
+    public Intake(Drive drive) {
+    //public Intake(DriveA301 drive) {
         this.drive = drive;
         intake.setReversed(true);
         intake.setFloatOn0(false);
