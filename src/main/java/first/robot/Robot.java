@@ -10,7 +10,6 @@ import org.wpilib.framework.OpModeRobot;
 import org.wpilib.net.PortForwarder;
 
 import first.robot.subsystems.Drive;
-//import first.robot.subsystems.DriveA301;
 import first.robot.subsystems.Intake;
 import first.robot.subsystems.Shooter;
 
@@ -25,7 +24,6 @@ import first.robot.subsystems.Shooter;
 public class Robot extends OpModeRobot {
 
   public final Drive drive;
-  //public final DriveA301 drive;
   public final Intake intake;
   public final Shooter shooter;
 
@@ -35,19 +33,8 @@ public class Robot extends OpModeRobot {
    */
   public Robot() {
     drive = new Drive();
-    //drive = new DriveA301();
     intake = new Intake(drive);
     shooter = new Shooter();
-
-    PortForwarder.add(5801, "172.29.0.1", 5801);
-    PortForwarder.add(5802, "172.29.0.1", 5802);
-    PortForwarder.add(5803, "172.29.0.1", 5803);
-    PortForwarder.add(5804, "172.29.0.1", 5804);
-    PortForwarder.add(5805, "172.29.0.1", 5805);
-    PortForwarder.add(5806, "172.29.0.1", 5806);
-    PortForwarder.add(5807, "172.29.0.1", 5807);
-    PortForwarder.add(5808, "172.29.0.1", 5808);
-    PortForwarder.add(5809, "172.29.0.1", 5809);
 
   }
 

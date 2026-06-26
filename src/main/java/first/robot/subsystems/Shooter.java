@@ -1,6 +1,5 @@
 package first.robot.subsystems;
 
-import static org.wpilib.units.Units.Amp;
 import static org.wpilib.units.Units.Volt;
 
 import org.wpilib.epilogue.Logged;
@@ -8,7 +7,6 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 import org.wpilib.math.controller.PIDController;
 import org.wpilib.math.controller.SimpleMotorFeedforward;
 import org.wpilib.units.measure.Voltage;
-import org.wpilib.units.VoltageUnit;
 
 @Logged
 public class Shooter {
@@ -53,11 +51,12 @@ public class Shooter {
         right_motor.setFloatOn0(false);
         right_motor.setEnabled(true);
         right_motor.setDistancePerCount(1.0);
-        //right_motor.follow(left_motor);
 
         left_motor.setThrottle(0.);
         left_motor.resetEncoder();
 
+        setPID();
+        setFF();
         stop();
         kickeroff();
     }
@@ -80,15 +79,11 @@ public class Shooter {
 
     public void setPID() {
         pidc.setPID(kP, kI, kD);
-    //  left_motor.getVelocityConstants().setPID(kP, kI, kD);
-    //  right_motor.getVelocityConstants().setPID(kP, kI, kD);
     }
     public void setFF() {
         ff.setKs(kS);
         ff.setKv(kV);
         ff.setKa(kA);
-     // left_motor.getVelocityConstants().setFF(kS, kV, kA);
-     // right_motor.getVelocityConstants().setFF(kS, kV, kA);
     }
 
     public double[] getOuts() {
@@ -109,7 +104,6 @@ public class Shooter {
         double feedfw = ff.calculate(TARGET_VEL);
         left_motor.setVoltage(Voltage.ofBaseUnits(feedfw+feedback, Volt));
         right_motor.setVoltage(Voltage.ofBaseUnits(feedfw+feedback, Volt));
-      //left_motor.setVelocitySetpoint(TARGET_VEL);
     }
 
     public void medium() {
