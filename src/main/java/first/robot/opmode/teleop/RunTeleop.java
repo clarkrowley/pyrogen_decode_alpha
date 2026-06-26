@@ -3,7 +3,6 @@ package first.robot.opmode.teleop;
 import org.wpilib.driverstation.DefaultUserControls;
 import org.wpilib.driverstation.Gamepad.Button;
 import org.wpilib.driverstation.GenericHID.RumbleType;
-import org.wpilib.event.BooleanEvent;
 import org.wpilib.opmode.PeriodicOpMode;
 import org.wpilib.opmode.Teleop;
 import org.wpilib.system.Timer;
@@ -69,6 +68,7 @@ public class RunTeleop extends PeriodicOpMode {
         /* Called once when the robot is enabled. */
         teleopTimer.reset();
         endGameWarning = false;
+        robot.shooter.stop();
     }
 
 
@@ -76,7 +76,7 @@ public class RunTeleop extends PeriodicOpMode {
     public void periodic() {
         /* Called periodically (set time interval) while the robot is enabled. */
 
-        // Shooter.INSTANCE.run();
+        robot.shooter.setRPM();
 
         if (teleopTimer.get() >= 80. & teleopTimer.get() <= 90.) {
             if (! endGameWarning) {
@@ -103,18 +103,16 @@ public class RunTeleop extends PeriodicOpMode {
             intakeOutButton = false;
         }
 
-        /*
-        boolean kickerBackButton = gamepad1.right_bumper;
-        boolean kickerOnButton = userControls.getGamepad(1).getRightTriggerAxis().greaterThan(0.3);
+        boolean kickerOnButton = userControls.getGamepad(1).getRightTriggerAxis() > 0.3;
+        boolean kickerBackButton = userControls.getGamepad(1).getButtonPressed(Button.RIGHT_BUMPER);
         if (kickerOnButton && kickerBackButton) {
             kickerOnButton = false;
         }
 
-        boolean shooterButtonHigh =  gamepad1.dpad_up;
-        boolean shooterButtonMedium = gamepad1.dpad_right;
-        boolean shooterButtonLow = gamepad1.dpad_down;
-        boolean shooterButtonOff = gamepad1.dpad_left;
-        */
+        boolean shooterButtonHigh =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_UP);
+        boolean shooterButtonMedium =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_RIGHT);
+        boolean shooterButtonLow =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_DOWN);
+        boolean shooterButtonOff =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_LEFT);
 
         // INTAKE CODE
         if (intakeInButton) {
@@ -129,36 +127,26 @@ public class RunTeleop extends PeriodicOpMode {
 
         }
 
-        /*
         if (shooterButtonHigh) {
-            Shooter.INSTANCE.high();
-            telemetry.addLine("Shooter: ShootHigh");
+            robot.shooter.high();
         }
         if (shooterButtonMedium) {
-            Shooter.INSTANCE.medium();
-            telemetry.addLine("Shooter: shootMid");
+            robot.shooter.medium();
         }
         if (shooterButtonLow) {
-            Shooter.INSTANCE.low();
-            telemetry.addLine("Shooter: ShootLow");
+            robot.shooter.low();
         }
         if (shooterButtonOff) {
-            Shooter.INSTANCE.stop();
-            telemetry.addLine("Shooter: Stop");
+            robot.shooter.stop();
         }
 
         if (kickerOnButton) {
-            Shooter.INSTANCE.kickeron();
-            telemetry.addLine("Kicker: In");
+            robot.shooter.kickeron();
         } else if (kickerBackButton) {
-            Shooter.INSTANCE.kickerout();
-            telemetry.addLine("Kicker: Out");
+            robot.shooter.kickerout();
         } else {
-            Shooter.INSTANCE.kickeroff();
-            telemetry.addLine("Kicker: Off");
+            robot.shooter.kickeroff();
         }
-
-        */
 
         double drive = -1. * squareInput(userControls.getGamepad(1).getLeftY());
         double strafe = -1. * squareInput(userControls.getGamepad(1).getLeftX());

@@ -104,10 +104,15 @@ public class TuneShooter extends PeriodicOpMode {
         robot.shooter.setFF();
         robot.shooter.setPID();
         robot.shooter.setRPM();
+        double vals[] = robot.shooter.getOuts();
+        SmartDashboard.putNumber("vals target tickspersec",vals[3]);
+        SmartDashboard.putNumber("vals feedbk",vals[0]);
+        SmartDashboard.putNumber("vals feedfw",vals[1]);
+        SmartDashboard.putNumber("vals voltage",vals[2]);
 
         double m_vel_left = robot.shooter.left_motor.getEncoderVelocity();
         double m_vel_right = robot.shooter.right_motor.getEncoderVelocity();
-        double TARGET_VEL = RPM * 27 / 60;
+        double TARGET_VEL = RPM * 28 / 60;
         SmartDashboard.putNumber("target tickspersec speed",TARGET_VEL);
         SmartDashboard.putNumber("left motor speed",m_vel_left);
         SmartDashboard.putNumber("right motor speed",m_vel_right);

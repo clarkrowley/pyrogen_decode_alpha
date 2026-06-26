@@ -20,11 +20,11 @@ public class Shooter {
     public final ExpansionHubMotor right_motor = new ExpansionHubMotor(1, 1);
     public final ExpansionHubMotor kicker = new ExpansionHubMotor(0, 2);
 
-    public double kP = 0.0;
+    public double kP = 0.007;
     public double kI = 0.0;
     public double kD = 0.0;
-    public double kS = 0.0;
-    public double kV = 0.0;
+    public double kS = 1.0;
+    public double kV = 0.002;
     public double kA = 0.0;
     public double RPM = 0.0;
 
@@ -90,36 +90,47 @@ public class Shooter {
      // left_motor.getVelocityConstants().setFF(kS, kV, kA);
      // right_motor.getVelocityConstants().setFF(kS, kV, kA);
     }
+
+    public double[] getOuts() {
+        double[] vals = {0.,0.,0.,0.};
+        double TARGET_VEL = RPM * TICKS_PER_REV * VEL_SCALE / 60;
+        pidc.setSetpoint(TARGET_VEL);
+        vals[0] = pidc.calculate(left_motor.getEncoderVelocity());
+        vals[1] = ff.calculate(TARGET_VEL);
+        vals[2] = Voltage.ofBaseUnits(vals[0]+vals[1], Volt).magnitude();
+        vals[3] = TARGET_VEL;
+        return vals;
+    }
+
     public void setRPM() {
         double TARGET_VEL = RPM * TICKS_PER_REV * VEL_SCALE / 60;
         pidc.setSetpoint(TARGET_VEL);
         double feedback = pidc.calculate(left_motor.getEncoderVelocity());
-        double feedfw = ff.calculate(left_motor.getEncoderVelocity());
+        double feedfw = ff.calculate(TARGET_VEL);
         left_motor.setVoltage(Voltage.ofBaseUnits(feedfw+feedback, Volt));
         right_motor.setVoltage(Voltage.ofBaseUnits(feedfw+feedback, Volt));
-        
       //left_motor.setVelocitySetpoint(TARGET_VEL);
     }
 
     public void medium() {
-        left_motor.setVelocitySetpoint(TARGET_VEL_MED);
+        RPM = TARGET_RPM_MED;
     }
 
     public void low() {
-      left_motor.setVelocitySetpoint(TARGET_VEL_LOW);
+        RPM = TARGET_RPM_LOW;
     }
 
     public void high() {
-        left_motor.setVelocitySetpoint(TARGET_VEL_HIGH);
+        RPM = TARGET_RPM_HIGH;
     }
 
     public void autoshot(){
-        left_motor.setVelocitySetpoint(TARGET_VEL_AUTOSHOT);
+        RPM = TARGET_RPM_AUTOSHOT;
     }
 
     public void stop() {
-        left_motor.setVelocitySetpoint(0.);
-        right_motor.setVelocitySetpoint(0.);
+        RPM = 0;
+        setRPM();
     }
 
     public void kickeron() {
