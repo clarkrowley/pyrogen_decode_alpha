@@ -1,15 +1,24 @@
 package first.robot.subsystems;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
+
+//import first.robot.subsystems.Drive;
+//import first.robot.subsystems.DriveA301;
 
 public class Intake {
-    public static final Intake INSTANCE = new Intake();
-    private Intake() { }
+    private final ExpansionHubMotor intake = new ExpansionHubMotor(0, 1);
+    private Drive drive;
+    // private DriveA301 drive;
 
-    private String motor_name = "intake_motor";
-    public DcMotorEx intake_motor;
+    public Intake(Drive drive) {
+    //public Intake(DriveA301 drive) {
+        this.drive = drive;
+        intake.setReversed(true);
+        intake.setFloatOn0(false);
+        intake.setEnabled(true);
+        intake.setThrottle(0.);
+        intake.resetEncoder();
+    }
 
     private double INTAKE_OUT_POWER = 0.59;
     private double INTAKE_IN_POWER = -1.0;
@@ -17,22 +26,17 @@ public class Intake {
     private double INTAKE_MIN_POWER = -0.4;
 
     public void intakein(){
-        intake_motor.setPower(INTAKE_IN_POWER);
+        intake.setThrottle(INTAKE_IN_POWER);
     }
     public void intakeout(){
-        intake_motor.setPower(INTAKE_OUT_POWER);
+        intake.setThrottle(INTAKE_OUT_POWER);
     }
     public void intakeoff() {
         double minSpeed = 0.;
-        if (Drive.INSTANCE.fwdSpeed > 0.1) {
+        if (drive.fwdSpeed > 0.1) {
             minSpeed = INTAKE_MIN_POWER;
         }
-        intake_motor.setPower(minSpeed);
+        intake.setThrottle(minSpeed);
     }
 
-    public void init(HardwareMap hMap) {
-        intake_motor = hMap.get(DcMotorEx.class, motor_name);
-
-        intake_motor.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
 }

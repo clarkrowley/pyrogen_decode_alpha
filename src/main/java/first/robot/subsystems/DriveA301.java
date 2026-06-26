@@ -1,8 +1,9 @@
 package first.robot.subsystems;
 
 import org.wpilib.epilogue.Logged;
-import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
+import org.wpilib.hardware.hal.CANBusMap;
 
+import com.revrobotics.spark.A301;
 
 /*
  * Positive X is forward
@@ -15,41 +16,31 @@ import org.wpilib.hardware.expansionhub.ExpansionHubMotor;
 */
 
 @Logged
-public class Drive {
+public class DriveA301 {
 
-    public final ExpansionHubMotor left_front = new ExpansionHubMotor(0, 0);
-    public final ExpansionHubMotor right_front = new ExpansionHubMotor(0, 1);
-    public final ExpansionHubMotor left_back = new ExpansionHubMotor(0, 2);
-    public final ExpansionHubMotor right_back = new ExpansionHubMotor(0, 3);
+    public final A301 left_front = new A301(CANBusMap.CAN_D0);
+    public final A301 left_back = new A301(CANBusMap.CAN_D1);
+    public final A301 right_front = new A301(CANBusMap.CAN_D13);
+    public final A301 right_back = new A301(CANBusMap.CAN_D14);
 
     public double fwdSpeed;
 
-    public Drive() {
+    public DriveA301() {
 
-        left_front.setReversed(false);
-        left_back.setReversed(false);
-        right_front.setReversed(true);
-        right_back.setReversed(true);
-
-        left_front.setFloatOn0(false);
-        left_back.setFloatOn0(false);
-        right_front.setFloatOn0(false);
-        right_back.setFloatOn0(false);
-
-        left_front.setEnabled(true);
-        left_back.setEnabled(true);
-        right_front.setEnabled(true);
-        right_back.setEnabled(true);
+        left_front.setInverted(false);
+        left_back.setInverted(false);
+        right_front.setInverted(true);
+        right_back.setInverted(true);
 
         left_front.setThrottle(0.);
         left_back.setThrottle(0.);
         right_front.setThrottle(0.);
         right_back.setThrottle(0.);
 
-        left_front.resetEncoder();
-        left_back.resetEncoder();
-        right_front.resetEncoder();
-        right_back.resetEncoder();
+        left_front.setRelativeEncoderPosition(0.);
+        left_back.setRelativeEncoderPosition(0.);
+        right_front.setRelativeEncoderPosition(0.);
+        right_back.setRelativeEncoderPosition(0.);
     }
 
     public void stop() {

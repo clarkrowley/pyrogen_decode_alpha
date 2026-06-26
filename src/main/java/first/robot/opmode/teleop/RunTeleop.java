@@ -25,7 +25,6 @@ public class RunTeleop extends PeriodicOpMode {
 
     final private Timer teleopTimer = new Timer();
     final private Timer blinkTimer = new Timer();
-    final private Timer rumbleTimer = new Timer();
     boolean endGameWarning = false;
 
     @Override
@@ -69,6 +68,7 @@ public class RunTeleop extends PeriodicOpMode {
         /* Called once when the robot is enabled. */
         teleopTimer.reset();
         endGameWarning = false;
+        robot.shooter.stop();
     }
 
 
@@ -76,7 +76,7 @@ public class RunTeleop extends PeriodicOpMode {
     public void periodic() {
         /* Called periodically (set time interval) while the robot is enabled. */
 
-        // Shooter.INSTANCE.run();
+        robot.shooter.setRPM();
 
         if (teleopTimer.get() >= 80. & teleopTimer.get() <= 90.) {
             if (! endGameWarning) {
@@ -94,80 +94,65 @@ public class RunTeleop extends PeriodicOpMode {
             }
         }
 
-        /*
-        // boolean intakeInButton = gamepad1.left_trigger > 0.2;
-        //boolean intakeOutButton = gamepad1.left_bumper;
-        boolean intakeInButton = gamepad1.a;
-        boolean intakeOutButton = gamepad1.b;
+        //boolean intakeInButton = userControls.getGamepad(1).getLeftTriggerAxis().greaterThan(0.3);
+        boolean intakeInButton = userControls.getGamepad(1).getButtonPressed(Button.SOUTH_FACE); // A button
+        boolean intakeOutButton = userControls.getGamepad(1).getButtonPressed(Button.EAST_FACE); // B button
+
         if (intakeOutButton && intakeInButton) {
             intakeInButton = false;
             intakeOutButton = false;
         }
 
-        boolean kickerBackButton = gamepad1.right_bumper;
-        boolean kickerOnButton = gamepad1.right_trigger > 0.3;
+        boolean kickerOnButton = userControls.getGamepad(1).getRightTriggerAxis() > 0.3;
+        boolean kickerBackButton = userControls.getGamepad(1).getButtonPressed(Button.RIGHT_BUMPER);
         if (kickerOnButton && kickerBackButton) {
             kickerOnButton = false;
         }
 
-        boolean shooterButtonHigh =  gamepad1.dpad_up;
-        boolean shooterButtonMedium = gamepad1.dpad_right;
-        boolean shooterButtonLow = gamepad1.dpad_down;
-        boolean shooterButtonOff = gamepad1.dpad_left;
+        boolean shooterButtonHigh =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_UP);
+        boolean shooterButtonMedium =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_RIGHT);
+        boolean shooterButtonLow =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_DOWN);
+        boolean shooterButtonOff =  userControls.getGamepad(1).getButtonPressed(Button.DPAD_LEFT);
 
         // INTAKE CODE
         if (intakeInButton) {
-            Intake.INSTANCE.intakein();
-            telemetry.addLine("Intake: In");
+            robot.intake.intakein();
+            //telemetry.addLine("Intake: In");
         } else if (intakeOutButton) {
-            Intake.INSTANCE.intakeout();
-            telemetry.addLine("Intake: Out");
+            robot.intake.intakeout();
+            //telemetry.addLine("Intake: Out");
         } else {
-            Intake.INSTANCE.intakeoff();
-            telemetry.addLine("Intake: Off");
+            robot.intake.intakeoff();
+            //telemetry.addLine("Intake: Off");
 
         }
 
         if (shooterButtonHigh) {
-            Shooter.INSTANCE.high();
-            telemetry.addLine("Shooter: ShootHigh");
+            robot.shooter.high();
         }
         if (shooterButtonMedium) {
-            Shooter.INSTANCE.medium();
-            telemetry.addLine("Shooter: shootMid");
+            robot.shooter.medium();
         }
         if (shooterButtonLow) {
-            Shooter.INSTANCE.low();
-            telemetry.addLine("Shooter: ShootLow");
+            robot.shooter.low();
         }
         if (shooterButtonOff) {
-            Shooter.INSTANCE.stop();
-            telemetry.addLine("Shooter: Stop");
+            robot.shooter.stop();
         }
 
         if (kickerOnButton) {
-            Shooter.INSTANCE.kickeron();
-            telemetry.addLine("Kicker: In");
+            robot.shooter.kickeron();
         } else if (kickerBackButton) {
-            Shooter.INSTANCE.kickerout();
-            telemetry.addLine("Kicker: Out");
+            robot.shooter.kickerout();
         } else {
-            Shooter.INSTANCE.kickeroff();
-            telemetry.addLine("Kicker: Off");
+            robot.shooter.kickeroff();
         }
 
-        */
-
-        if (userControls.getGamepad(1).getButtonPressed(Button.LEFT_BUMPER)) {
-            //Drive.autoAim();
-            //telemetry.addData("Drive: ","AutoAim()");
-        } else {
-            double drive = -1. * squareInput(userControls.getGamepad(1).getLeftY());
-            double strafe = -1. * squareInput(userControls.getGamepad(1).getLeftX());
-            double turn = -1. * squareInput(userControls.getGamepad(1).getRightX());
-            robot.drive.moveRobot(drive, strafe, turn);
-            // telemetry.addData("Drive: ","powers: %5.2f / %5.2f / %5.2f",drive,strafe,turn);
-        }
+        double drive = -1. * squareInput(userControls.getGamepad(1).getLeftY());
+        double strafe = -1. * squareInput(userControls.getGamepad(1).getLeftX());
+        double turn = -1. * squareInput(userControls.getGamepad(1).getRightX());
+        robot.drive.moveRobot(drive, strafe, turn);
+        // telemetry.addData("Drive: ","powers: %5.2f / %5.2f / %5.2f",drive,strafe,turn);
 
         // telemetry.update();
     }
